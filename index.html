@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mijn Podcastbibliotheek</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{--nav:56px;--pbh:88px;--ac:#1DB954;--ach:#1ed760;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=light]{color-scheme:light;--bg:#f2f3f5;--sf:#fff;--el:#eceef1;--hv:#e3e6ea;--tx:#0e0f12;--mut:#62666f;--acx:#12853b;--ln:rgba(0,0,0,.07);--trk:rgba(0,0,0,.16);--pl:rgba(255,255,255,.94);--pop:#fff;--sh:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.06);--shp:0 8px 30px rgba(16,24,40,.2)}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0f0f10;--sf:#181818;--el:#262626;--hv:#2e2e2e;--tx:#fff;--mut:#b3b3b3;--acx:#1ed760;--ln:rgba(255,255,255,.08);--trk:rgba(255,255,255,.22);--pl:rgba(32,32,32,.94);--pop:#2a2a2a;--sh:none;--shp:0 10px 32px rgba(0,0,0,.65)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 15px/1.45 Inter,"Circular Std",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:31}
+h1,h2{font-weight:700;letter-spacing:-.02em;margin:0}
+h1{font-size:28px;line-height:1.15}h2{font-size:20px;margin:28px 0 12px}
+svg{display:block;flex:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+button,input,select,textarea,.cd,.row,.chip{transition:background-color .15s,color .15s,transform .15s,box-shadow .15s,opacity .15s}
+.sub{color:var(--mut);font-size:14px;margin:4px 0 16px}
+.note,.dz small{display:block;color:var(--mut);font-size:13px;margin-top:10px}
+#sb{display:contents}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg)}
+.lg{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;letter-spacing:-.02em}.lg svg{color:var(--ac)}
+#st{display:none}
+#nav{position:fixed;inset:auto 0 0;z-index:40;display:flex;justify-content:space-around;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:var(--pl);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 -1px 0 var(--ln)}
+#nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:11px;font-weight:700;color:var(--mut);border-radius:8px}
+#nav button:nth-child(n+5){display:none}
+#nav .ic{display:grid;place-items:center;height:22px}#nav .lb{display:none}
+#nav button.on{color:var(--tx)}#nav button.on .ic{color:var(--acx)}
+main{min-width:0;padding:8px 16px calc(var(--nav) + 172px)}
+#chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 16px;padding:0 16px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--el);font-size:13px;font-weight:700;white-space:nowrap}
+.chip svg{width:16px;height:16px}.chip.on{background:var(--tx);color:var(--bg)}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--el);border:0;border-radius:8px;padding:10px 12px;outline:0}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 2px var(--ac)}
+select{-webkit-appearance:none;appearance:none;padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b8b95' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+label{display:block;margin-bottom:12px;font-size:12px;font-weight:700;color:var(--mut)}label>*{margin-top:6px;color:var(--tx);font-weight:400}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}.tools input{grid-column:1/-1;border-radius:999px;padding-left:18px}
+.b1,.b2{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-size:14px;font-weight:700}
+.b1{padding:10px 20px;background:var(--ac);color:#000}.b1:hover{background:var(--ach);transform:scale(1.03)}.b1:active{transform:scale(.98)}.b1:disabled{opacity:.6;transform:none}
+.b2{padding:8px 14px;font-size:13px;background:var(--el)}.b2:hover{background:var(--hv)}
+.ib{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;color:var(--mut)}
+.ib:hover{background:var(--el);color:var(--tx)}.ib:active{transform:scale(.94)}.ib.fv{color:var(--acx)}
+.ib.pl{background:var(--ac);color:#000}.ib.pl:hover{background:var(--ach);color:#000;transform:scale(1.08)}
+.ib.big{width:44px;height:44px;background:var(--tx);color:var(--bg)}.ib.big:hover{background:var(--tx);color:var(--bg);transform:scale(1.06)}
+.sp{min-width:46px;height:28px;padding:0 10px;border-radius:999px;background:var(--el);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}.sp:hover{background:var(--hv)}
+.cv{display:grid;place-items:center;background-size:cover;background-position:center;border-radius:6px;color:rgba(255,255,255,.75);font-weight:700;font-size:20px;cursor:pointer;flex:none}
+.row{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr) auto auto auto;gap:4px 12px;align-items:center;padding:8px;border-radius:8px}
+.row .cv{width:48px;height:48px}.row.on{background:var(--el)}.row.on b{color:var(--acx)}
+.mt{min-width:0}.mt b{display:block;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt small{display:block;color:var(--mut);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tg i{font-style:normal;margin-left:8px}.du{display:none;color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}
+.bd{display:inline-block;margin-right:4px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:700;line-height:18px}
+.bd.ok{background:color-mix(in srgb,var(--ac) 18%,transparent);color:var(--acx)}.bd.wn{background:rgba(240,180,76,.18);color:#b87d0a}.bd.dm{background:var(--el);color:var(--mut)}
+:root[data-theme=dark] .bd.wn{color:#f0b44c}
+.mw{position:relative}
+.pop{position:absolute;right:0;top:42px;z-index:5;min-width:190px;padding:4px;border-radius:10px;background:var(--pop);box-shadow:var(--shp)}
+.pop button{display:block;width:100%;padding:9px 10px;border-radius:6px;text-align:left;font-size:14px}.pop button:hover{background:var(--el)}
+@media(hover:hover){.row:hover{background:var(--hv)}.row .ib.pl{opacity:0;transform:scale(.9)}.row:hover .ib.pl,.row.on .ib.pl,.row .ib.pl:focus-visible{opacity:1;transform:none}}
+.rail{display:flex;gap:12px;overflow-x:auto;margin:0 -16px;padding:2px 16px 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px}
+.cd{position:relative;flex:0 0 148px;padding:12px;border-radius:10px;background:var(--sf);box-shadow:var(--sh);cursor:pointer}
+.grid .cd{flex:none}.cd:hover{background:var(--hv)}
+.cd .cv{position:relative;width:100%;aspect-ratio:1;border-radius:8px;font-size:44px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.cd .cv::after{content:"";position:absolute;right:8px;bottom:8px;width:44px;height:44px;border-radius:50%;background:var(--ac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='m8 5 12 7-12 7z'/%3E%3C/svg%3E") 54% 50%/18px no-repeat;box-shadow:0 8px 16px rgba(0,0,0,.35);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s}
+.cd:active .cv::after,.cd:focus-visible .cv::after{opacity:1;transform:none}
+@media(hover:hover){.cd:hover .cv::after{opacity:1;transform:none}.cd .cv:hover::after{background-color:var(--ach)}}
+.cd b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:12px;font-size:14px;font-weight:700;line-height:1.3}.cd small{display:block;color:var(--mut);font-size:13px}
+.hero{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:22px;border-radius:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 30%,var(--sf)),var(--sf) 75%);box-shadow:var(--sh)}
+.card,.empty{padding:16px;border-radius:12px;background:var(--sf);box-shadow:var(--sh)}.empty{margin-top:16px;padding:32px 16px;text-align:center}
+.two{display:grid;gap:16px;align-items:start}
+.dz{padding:32px 16px;border-radius:14px;text-align:center;background:var(--sf);box-shadow:inset 0 0 0 2px var(--el)}
+.dz.over{background:color-mix(in srgb,var(--ac) 10%,var(--sf));box-shadow:inset 0 0 0 2px var(--ac)}
+.pi{padding:8px 0;font-size:14px;box-shadow:0 1px 0 var(--ln)}
+.pi button{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:var(--mut)}.pi button:hover{background:var(--el);color:var(--tx)}
+#pb{position:fixed;z-index:35;left:8px;right:8px;bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px) + 8px);display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"pn pcb" "pr pr";gap:2px 8px;align-items:center;padding:8px 10px 4px;border-radius:12px;background:var(--pl);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:var(--shp)}
+#pb.open{grid-template-areas:"pn pn" "pcb pcb" "pr pr" "pv pv"}
+.pn{grid-area:pn;display:flex;align-items:center;gap:10px;min-width:0;cursor:pointer}
+.pn .cv{width:44px;height:44px}.pn .tx{min-width:0;flex:1}.pn b,.pn small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pn b{font-weight:700;font-size:14px}.pn small{color:var(--mut);font-size:12px}
+.chv{color:var(--mut);transition:transform .2s}#pb.open .chv{transform:rotate(180deg)}
+.pcb{grid-area:pcb;display:flex;align-items:center;justify-content:flex-end;gap:2px}
+#pb.open .pcb{justify-content:center;gap:6px}
+.xk,.pv{display:none}#pb.open .xk{display:grid}#pb.open .pv{display:flex}
+.pr{grid-area:pr;display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;font-variant-numeric:tabular-nums}.pr input{flex:1;width:auto}
+.pv{grid-area:pv;align-items:center;justify-content:space-between;gap:10px;padding:4px 0}#vi{color:var(--mut)}#vol{width:96px;--p:100%}
+input[type=range]{-webkit-appearance:none;appearance:none;height:16px;margin:0;padding:0;background:transparent;box-shadow:none;cursor:pointer;--p:0%}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:99px;background:linear-gradient(to right,var(--tx) var(--p),var(--trk) var(--p))}
+input[type=range]:hover::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--ac) var(--p),var(--trk) var(--p))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;margin-top:-4px;border-radius:50%;background:var(--tx);box-shadow:0 1px 4px rgba(0,0,0,.4);transform:scale(0);transition:transform .15s}
+input[type=range]:hover::-webkit-slider-thumb,input[type=range]:focus-visible::-webkit-slider-thumb{transform:scale(1)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.25)}
+input[type=range]::-moz-range-track{height:4px;border-radius:99px;background:var(--trk)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:99px;background:var(--tx)}
+input[type=range]:hover::-moz-range-progress{background:var(--ac)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:var(--tx);transform:scale(0);transition:transform .15s}
+input[type=range]:hover::-moz-range-thumb,input[type=range]:focus-visible::-moz-range-thumb{transform:scale(1)}
+@media(hover:none){input[type=range]::-webkit-slider-thumb{transform:scale(1)}input[type=range]::-moz-range-thumb{transform:scale(1)}}
+#q{position:fixed;z-index:45;left:8px;right:8px;top:calc(64px + env(safe-area-inset-top,0px));max-height:60vh;overflow:auto;padding:14px;border-radius:14px;background:var(--pop);box-shadow:var(--shp)}
+#q[hidden],#modal[hidden]{display:none}
+#modal{position:fixed;inset:0;z-index:60;display:grid;place-items:end center;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.mb{width:100%;max-height:92vh;overflow:auto;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));border-radius:16px 16px 0 0;background:var(--sf);box-shadow:var(--shp)}
+.mb h2{margin-top:0}.mf{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+#toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:12px;z-index:70;display:flex;flex-direction:column;align-items:center;gap:8px}
+.ts{max-width:100%;padding:12px 16px;border-radius:10px;background:var(--tx);color:var(--bg);font-size:14px;font-weight:700;box-shadow:var(--shp)}.ts.err{background:#e22134;color:#fff}
+
+:root{--yt:#f03}
+.tools select:only-child{grid-column:1/-1}
+.seg{display:flex;gap:4px;width:max-content;max-width:100%;padding:4px;margin-bottom:16px;border-radius:999px;background:var(--el);overflow-x:auto}
+.seg button{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;color:var(--mut);white-space:nowrap}
+.seg button.on{background:var(--tx);color:var(--bg)}
+.vb{display:inline-block;max-width:100%;padding:2px 10px;border-radius:6px;background:var(--yt);color:#fff;font-size:12px;font-weight:700;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vg{display:grid;gap:20px}.vc{cursor:pointer}
+.vt{position:relative;display:grid;place-items:center;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background-size:cover;background-position:center;color:#fff}
+.vt::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.vn{font-size:56px;font-weight:700;opacity:.45}
+.vdur{position:absolute;z-index:2;right:8px;bottom:8px;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.82);color:#fff;font-size:12px;font-weight:700;font-style:normal;font-variant-numeric:tabular-nums}
+.vt::before{content:"";position:absolute;z-index:1;left:50%;top:50%;width:56px;height:40px;margin:-20px 0 0 -28px;border-radius:12px;background:var(--yt) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='m8 5 12 7-12 7z'/%3E%3C/svg%3E") center/22px no-repeat;opacity:0;transform:scale(.85);transition:opacity .15s,transform .15s}
+.vc:hover .vt::before,.vc:active .vt::before{opacity:1;transform:none}
+@media(hover:none){.vt::before{opacity:.92;transform:none}}
+.vm{display:grid;gap:4px;padding:12px 2px 0}.vm .vb{justify-self:start}.vm b{font-size:16px;font-weight:700;line-height:1.3;letter-spacing:-.01em}.vm small{color:var(--mut);font-size:13px}
+.spot{position:relative;display:flex;align-items:flex-end;aspect-ratio:16/9;min-height:200px;margin-bottom:20px;border-radius:14px;overflow:hidden;background-size:cover;background-position:center;color:#fff;cursor:pointer;box-shadow:var(--sh)}
+.spot::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8),rgba(0,0,0,.05) 70%)}
+.spot .sc{position:relative;display:grid;gap:8px;justify-items:start;padding:20px}
+.spot h2{margin:0;font-size:24px;color:#fff}.spot p{margin:0;font-size:14px;opacity:.88}
+.spot .b1{background:#fff;color:#000}.spot:hover .b1{transform:scale(1.04)}
+.spot.off{flex-direction:column;align-items:flex-start;justify-content:center;gap:16px;aspect-ratio:auto;min-height:0;padding:20px;background:var(--sf);color:var(--tx);cursor:default}
+.spot.off::before{display:none}.spot.off h2{margin:8px 0 0;color:var(--tx)}.spot.off .sub{margin:0}.spot.off .b1{background:var(--ac);color:#000}
+.wv{max-width:1100px;margin:0 auto}.wv>.b2{margin-bottom:12px}
+.p169{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;box-shadow:var(--shp)}
+.p169 video,.p169 iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.wi{padding-top:16px}.wi h1{margin:10px 0 6px;font-size:24px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--mut);font-size:13px}.meta span{display:inline-flex;align-items:center;gap:5px}.meta svg{width:15px;height:15px}
+.story{margin:16px 0;padding:16px;border-radius:12px;background:var(--sf);box-shadow:var(--sh);font-size:15px;line-height:1.6;white-space:pre-wrap}
+.wn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.wn .b2{padding:12px}.wn .b2:disabled{opacity:.4;cursor:default}
+.wa{display:flex;flex-wrap:wrap;gap:8px}
+body.theater{--pbh:0px}body.theater #pb,body.theater #q{display:none}
+body.theater main{padding-bottom:calc(var(--nav) + 32px + env(safe-area-inset-bottom,0px))}
+@media (min-width:820px){
+:root{--nav:0px}
+h1{font-size:36px}
+.top{position:static;padding:4px 8px 18px;background:none}body::before{display:none}
+#sb{position:fixed;z-index:20;display:flex;flex-direction:column;left:12px;top:calc(12px + env(safe-area-inset-top,0px));bottom:calc(var(--pbh) + 12px);width:240px;padding:16px 12px;border-radius:14px;background:var(--sf);box-shadow:var(--sh);overflow:auto}
+#nav{position:static;display:flex;flex-direction:column;justify-content:flex-start;gap:2px;padding:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+#nav button,#nav button:nth-child(n+5){display:flex;flex-direction:row;flex:none;justify-content:flex-start;gap:14px;padding:10px 12px;font-size:14px}
+#nav .lb{display:inline}#nav .sh{display:none}
+#nav button:hover{color:var(--tx);background:var(--el)}#nav button.on{background:var(--el)}
+#st{display:block;margin-top:auto;padding:16px 8px 0;font-size:11.5px;line-height:1.5;color:var(--mut)}#st b{display:block;margin-top:8px;color:var(--tx)}
+#chips{display:none}
+main{margin-left:264px;padding:24px 32px calc(var(--pbh) + 32px)}
+.tools{display:flex;flex-wrap:wrap}.tools>*{flex:1 1 160px;width:auto}.tools input{flex:2 1 260px}
+.row{grid-template-columns:56px minmax(0,1fr) auto auto auto auto}.row .cv{width:56px;height:56px}.du{display:block}
+.rail{margin:0;padding:2px 0 12px}.rail .cd{flex-basis:172px}.grid{grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:16px}
+.hero{flex-direction:row;justify-content:space-between;align-items:center;padding:28px 32px}
+.two{grid-template-columns:1fr 1fr}
+#pb,#pb.open{left:0;right:0;bottom:0;grid-template-columns:minmax(0,1fr) minmax(320px,1.6fr) minmax(0,1fr);grid-template-areas:"pn pcb pv" "pn pr pv";gap:0 24px;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));border-radius:0;box-shadow:0 -8px 24px rgba(0,0,0,.1)}
+.pn{cursor:default}.pn .cv{width:56px;height:56px}.chv{display:none}
+.pcb,#pb.open .pcb{justify-content:center;gap:6px}.xk,#pb.open .xk{display:grid}.pv,#pb.open .pv{display:flex;justify-content:flex-end;padding:0}
+#q{left:auto;right:16px;top:auto;bottom:calc(var(--pbh) + 12px);width:380px;max-height:50vh}
+#modal{place-items:center;padding:16px}.mb{width:min(480px,100%);border-radius:16px}
+#toasts{left:auto;right:16px;width:360px;align-items:stretch}
+.vg{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:28px 20px}
+.spot{aspect-ratio:21/9}.spot h2{font-size:34px}.spot .sc{max-width:640px;padding:32px}.spot.off{flex-direction:row;align-items:center;justify-content:space-between;padding:24px 28px}
+.wi h1{font-size:30px}
+}
+</style></head><body>
+<div id="app">
+<aside id="sb">
+<header class="top"><div class="lg"><span id="lgi"></span><span>Mijn Podcasts</span></div><button class="ib" id="theme" data-a="theme" aria-label="Thema wisselen"></button></header>
+<nav id="nav" aria-label="Hoofdmenu"></nav>
+<div id="st"></div>
+</aside>
+<main><div id="chips"></div><div id="tools"></div><div id="ct"></div></main>
+</div>
+<div id="q" hidden></div>
+<footer id="pb">
+<div class="pn" data-a="expand"><div class="cv" id="pc"></div><div class="tx"><b id="pt">Niets wordt afgespeeld</b><small id="ps">Kies een aflevering</small></div><span class="chv" id="chv"></span></div>
+<div class="pcb"><button class="ib" data-a="prev" aria-label="Vorige"></button><button class="ib xk" data-a="skip" data-n="-15" aria-label="15 seconden terug"></button><button class="ib big" id="pp" data-a="toggle" aria-label="Afspelen of pauzeren"></button><button class="ib xk" data-a="skip" data-n="15" aria-label="15 seconden vooruit"></button><button class="ib" data-a="next" aria-label="Volgende"></button></div>
+<div class="pr"><span id="t0">0:00</span><input id="seek" type="range" min="0" max="0" step="1" value="0" aria-label="Voortgang"><span id="t1">0:00</span></div>
+<div class="pv"><button class="sp" id="spd" data-a="speed" aria-label="Afspeelsnelheid">1x</button><button class="b2" data-a="queue"><span id="qi"></span>Wachtrij <span id="qn">0</span></button><span id="vi"></span><input id="vol" type="range" min="0" max="1" step=".05" value="1" aria-label="Volume"></div>
+</footer>
+<div id="modal" hidden></div><div id="toasts"></div>
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const fmt=t=>{if(!isFinite(t)||!t)return'0:00';t=Math.floor(t);const h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return(h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0')};
+const DC=['Canada','Geschiedenis van Canada','Reizen en bestemmingen','Canadese provincies en steden','Cultuur en maatschappij','Natuur en wildlife','Persoonlijke verhalen','Overige onderwerpen'];
+const demos=()=>[['Waarom Canada zo groot voelt','Canada Compleet','c0'],['Van Cartier tot Confederatie','Canada Compleet','c1'],['Een week in de Rockies','Op reis in Canada','c2'],['Poutine, ahornsiroop en beleefdheid','Cultuurshock','c4'],['Grizzly’s van British Columbia','Wild Canada','c5']].map((x,i)=>({id:'d'+i,title:x[0],series:x[1],cat:x[2],desc:'Voorbeeldaflevering om het ontwerp te tonen. Er is geen audiobestand gekoppeld.',tags:['demo'],added:new Date(Date.now()-i*864e5).toISOString(),dur:0,fav:i==1,pos:0,last:0,cover:'',audio:{kind:'demo'}}));
+let S={eps:[],cats:DC.map((n,i)=>({id:'c'+i,name:n})),queue:[],vlogs:[]},V={view:'home',q:'',cat:'',ser:'',sort:'date',vs:'dd',add:'podcast',vsrc:'file',vid:null},cap={assets:null,doc:null},cur=null,ctx=[],menuId=null,pending=[],curUrl='',dragging=false,lastPos=0;
+const au=new Audio();au.preload='metadata';
+const ep=id=>S.eps.find(e=>e.id===id),real=()=>S.eps.filter(e=>e.audio.kind!=='demo');
+const cn=id=>(S.cats.find(c=>c.id===id)||{name:'Zonder categorie'}).name;
+const series=()=>[...new Set(S.eps.map(e=>e.series))].sort((a,b)=>a.localeCompare(b,'nl'));
+const cs=c=>!c?'':c.startsWith('data:')?c:'/_blob/'+c;
+const hue=s=>[...String(s)].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7)%60+195;
+const cvs=e=>e.cover?`background-image:url('${cs(e.cover)}')`:`background:linear-gradient(135deg,hsl(${hue(e.series)} 42% 30%),hsl(${hue(e.series)+40} 50% 13%))`;
+const cvt=e=>e.cover?'':E((e.series||'?')[0].toUpperCase());
+function toast(m,t){const d=document.createElement('div');d.className='ts '+(t||'');d.textContent=m;$('#toasts').append(d);setTimeout(()=>d.remove(),t?6000:3500)}
+/* opslag */
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('podlib',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const idbOp=async(m,...a)=>{const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('f',m==='get'?'readonly':'readwrite').objectStore('f')[m](...a);t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error)})};
+let sv,fl=false,fp=false;
+const save=()=>{clearTimeout(sv);sv=setTimeout(flush,500)};
+async function flush(){if(fl){fp=true;return}fl=true;try{const d=JSON.parse(JSON.stringify(S));try{localStorage.setItem('pl',JSON.stringify(d))}catch{}if(cap.doc)await cap.doc.set(d)}catch(e){toast('Bibliotheekgegevens opslaan mislukt: '+(e.message||e.code||'onbekende fout'),'err')}fl=false;if(fp){fp=false;flush()}}
+function load(){let d=null;try{d=JSON.parse(localStorage.getItem('pl'))}catch{}if(d&&d.eps)S=Object.assign(S,d);else S.eps=demos()}
+async function initCaps(){try{const u=await claude.use('user'),db=await claude.use('db');cap.assets=await claude.use('assets');const id=u&&await u.id();if(db&&id){cap.doc=db.doc('data/users/'+id+'/lib');const s=await cap.doc.get();if(s.exists)S=Object.assign(S,JSON.parse(JSON.stringify(s.data())));else flush()}}catch(e){}stat();view()}
+function stat(){$('#st').innerHTML=`Opslagstatus<b>Gegevens</b>${cap.doc?'Gesynchroniseerd met je account.':'Alleen in deze browser.'}<b>Audio</b>${cap.assets?'M4A tot 20 MB: duurzaam. Overige formaten: alleen deze browser.':'Alleen in deze browser (geen serveropslag beschikbaar).'}`}
+async function srcOf(e){const a=e.audio;if(a.kind==='asset')return'/_blob/'+a.id;const b=await idbOp('get',a.id);if(!b)throw 0;return URL.createObjectURL(b)}
+/* speler */
+async function play(id,keep){const e=ep(id);if(!e)return;if(e.audio.kind==='demo')return toast('Dit is een demo-aflevering zonder audiobestand. Upload een eigen bestand om af te spelen.','err');
+ let u;try{u=await srcOf(e)}catch{return toast('Het audiobestand staat niet op dit apparaat. Upload het opnieuw.','err')}
+ if(curUrl.startsWith('blob:'))URL.revokeObjectURL(curUrl);curUrl=u;cur=id;au.src=u;
+ au.onloadedmetadata=()=>{if(e.pos>5&&e.pos<au.duration-5)au.currentTime=e.pos;if(!e.dur){e.dur=au.duration;save()}up()};
+ try{await au.play()}catch{toast('Afspelen is niet gelukt in deze browser.','err')}e.last=Date.now();save();content()}
+const toggle=()=>{if(!cur){const f=ctx[0]||real()[0]?.id;return f?play(f):toast('Upload eerst een aflevering.','err')}au.paused?au.play():au.pause()};
+function next(){if(S.queue.length){const id=S.queue.shift();save();rq();return play(id)}const n=ctx[ctx.indexOf(cur)+1];n?play(n):toast('Einde van de lijst.')}
+function prev(){if(au.currentTime>4||ctx.indexOf(cur)<1)au.currentTime=0;else play(ctx[ctx.indexOf(cur)-1])}
+function up(){const e=ep(cur);$('#pt').textContent=e?e.title:'Niets wordt afgespeeld';$('#ps').textContent=e?e.series:'Kies een aflevering';$('#pc').style.cssText=e?cvs(e):'';$('#pc').textContent=e?cvt(e):'';$('#pp').innerHTML=au.paused?ic('<path d="m6 4 14 8-14 8z"/>',1,20):ic('<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',1,20);const d=au.duration||(e&&e.dur)||0;$('#seek').max=d;if(!dragging)$('#seek').value=au.currentTime||0;$('#t0').textContent=fmt(au.currentTime);$('#t1').textContent=fmt(d);if(!dragging)$('#seek').style.setProperty('--p',(d?au.currentTime/d*100:0)+'%')}
+au.ontimeupdate=()=>{up();const e=ep(cur);if(e&&au.currentTime){e.pos=au.currentTime;if(Date.now()-lastPos>15000){lastPos=Date.now();save()}}};
+au.onplay=au.onpause=()=>{up();if(V.view!=='watch')content();save()};
+au.onended=()=>{const e=ep(cur);if(e)e.pos=0;next()};
+au.onerror=()=>{if(cur)toast('Dit bestand kan niet worden afgespeeld.','err')};
+$('#seek').oninput=e=>{dragging=true;e.target.style.setProperty('--p',(+e.target.value/(+e.target.max||1)*100)+'%');$('#t0').textContent=fmt(+e.target.value)};$('#seek').onchange=e=>{au.currentTime=+e.target.value;dragging=false};
+$('#vol').oninput=e=>{au.volume=+e.target.value;e.target.style.setProperty('--p',e.target.value*100+'%')};
+function rq(){$('#qn').textContent=S.queue.length;const q=$('#q');if(q.hidden)return;q.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b>Wachtrij</b>${S.queue.length?'<button class="b2" data-a="qclear">Leegmaken</button>':''}</div>`+(S.queue.map((id,i)=>{const e=ep(id);return e?`<div class="pi" style="display:flex;justify-content:space-between;gap:8px"><span>${E(e.title)}</span><button data-a="qrm" data-i="${i}" aria-label="Verwijderen">${I.x}</button></div>`:''}).join('')||'<p class="note">De wachtrij is leeg. Voeg afleveringen toe via het menu bij een aflevering.</p>')}
+/* weergaven */
+const ic=(p,f,s=18)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const HP='<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',LS='<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>';
+const I={yt:ic('<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/>'),pin:ic('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>'),cl:ic('<path d="m15 18-6-6 6-6"/>'),cr:ic('<path d="m9 18 6-6-6-6"/>'),sun:ic('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>'),moon:ic('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'),chev:ic('<path d="m6 9 6 6 6-6"/>',0,20),home:ic('<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/>'),mic:ic('<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/>'),list:ic(LS),grid:ic('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>'),h:ic(HP,0,17),hf:ic(HP,1,17),clock:ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),plus:ic('<path d="M12 5v14M5 12h14"/>',0,16),play:ic('<path d="m6 4 14 8-14 8z"/>',1,16),pause:ic('<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',1,16),prev:ic('<path d="M19 20 9 12l10-8z"/><path d="M5 19V5"/>',1),next:ic('<path d="m5 4 10 8-10 8z"/><path d="M19 5v14"/>',1),more:ic('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>'),x:ic('<path d="M18 6 6 18M6 6l12 12"/>',0,15),vol:ic('<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>'),leaf:ic('<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',0,20),back:ic('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><text x="12" y="15.5" font-size="7.5" text-anchor="middle" fill="currentColor" stroke="none" font-weight="600">15</text>',0,20),fwd:ic('<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/><text x="12" y="15.5" font-size="7.5" text-anchor="middle" fill="currentColor" stroke="none" font-weight="600">15</text>',0,20)};
+const NAV=[['home','Home',I.home,'Home'],['vlogs','Vlogs',I.yt,'Vlogs'],['series','Podcasts',I.mic,'Podcasts'],['add','Toevoegen',I.plus,'Toevoegen'],['eps','Alle afleveringen',I.list],['cats','Categorieën',I.grid],['favs','Favorieten',I.h],['recent','Recent beluisterd',I.clock]];
+function go(v,o){V.view=v;if(v==='add'&&!(o&&o.add))V.add='podcast';Object.assign(V,o||{});if(!o)V.q=V.cat=V.ser='';view()}
+function view(){$('#nav').innerHTML=NAV.map(n=>`<button class="${V.view===n[0]||(V.view==='watch'&&n[0]==='vlogs')?'on':''}" data-a="go" data-v="${n[0]}"><span class="ic">${n[2]}</span><span class="lb">${n[1]}</span><span class="sh">${n[3]||n[1]}</span></button>`).join('');
+ const t=$('#tools');if(['eps','favs','recent'].includes(V.view)){t.innerHTML=`<div class="tools"><input id="s" type="search" placeholder="Zoek op titel, serie, tag of categorie…" value="${E(V.q)}"><select id="fc"><option value="">Alle categorieën</option>${S.cats.map(c=>`<option value="${c.id}"${V.cat===c.id?' selected':''}>${E(c.name)}</option>`).join('')}</select><select id="fs"><option value="">Alle series</option>${series().map(s=>`<option${V.ser===s?' selected':''}>${E(s)}</option>`).join('')}</select><select id="so"><option value="date"${V.sort==='date'?' selected':''}>Nieuwste eerst</option><option value="title"${V.sort==='title'?' selected':''}>Op titel</option><option value="last"${V.sort==='last'?' selected':''}>Laatst beluisterd</option></select></div>`}else if(V.view==='vlogs'){t.innerHTML=`<div class="tools"><select id="vs" aria-label="Sorteren"><option value="dd"${V.vs==='dd'?' selected':''}>Reisdag: aflopend</option><option value="dn"${V.vs==='dn'?' selected':''}>Reisdag: oplopend</option><option value="new"${V.vs==='new'?' selected':''}>Nieuwste reisdatum</option></select></div>`}else t.innerHTML='';
+ document.body.classList.toggle('theater',V.view==='watch');if(V.view==='watch')au.pause();$('#chips').innerHTML=['vlogs','watch','add'].includes(V.view)?'':NAV.slice(4).map(n=>`<button class="chip${V.view===n[0]?' on':''}" data-a="go" data-v="${n[0]}">${n[2]}${n[1]}</button>`).join('');content();up();rq();scrollTo(0,0)}
+function filt(){let l=S.eps.slice();if(V.view==='favs')l=l.filter(e=>e.fav);if(V.view==='recent')l=l.filter(e=>e.last);const q=V.q.toLowerCase();
+ if(q)l=l.filter(e=>[e.title,e.series,e.desc,cn(e.cat),...e.tags].join(' ').toLowerCase().includes(q));if(V.cat)l=l.filter(e=>e.cat===V.cat);if(V.ser)l=l.filter(e=>e.series===V.ser);
+ const s=V.view==='recent'?'last':V.sort;return l.sort(s==='title'?(a,b)=>a.title.localeCompare(b.title,'nl'):s==='last'?(a,b)=>b.last-a.last:(a,b)=>new Date(b.added)-new Date(a.added))}
+const badge=e=>e.audio.kind==='asset'?'<span class="bd ok">Duurzaam opgeslagen</span>':e.audio.kind==='local'?'<span class="bd wn">Alleen op dit apparaat</span>':'<span class="bd dm">Demo · geen audio</span>';
+const playing=e=>cur===e.id&&!au.paused;
+const row=e=>`<div class="row${cur===e.id?' on':''}"><div class="cv" style="${cvs(e)}" data-a="play" data-id="${e.id}">${cvt(e)}</div><div class="mt"><b>${E(e.title)}</b><small>${E(e.series)} · ${E(cn(e.cat))}</small><small class="tg">${badge(e)}${e.tags.filter(t=>t!=='demo').map(t=>'<i>#'+E(t)+'</i>').join('')}</small></div><span class="du">${e.dur?fmt(e.dur):'–'}</span><button class="ib${e.fav?' fv':''}" data-a="fav" data-id="${e.id}" aria-label="Favoriet">${e.fav?I.hf:I.h}</button><button class="ib pl" data-a="play" data-id="${e.id}" aria-label="Afspelen">${playing(e)?I.pause:I.play}</button><div class="mw"><button class="ib" data-a="menu" data-id="${e.id}" aria-label="Menu">${I.more}</button>${menuId===e.id?`<div class="pop"><button data-a="edit" data-id="${e.id}">Bewerken</button><button data-a="enq" data-id="${e.id}">Aan wachtrij toevoegen</button><button data-a="del" data-id="${e.id}" style="color:var(--red2)">Verwijderen</button></div>`:''}</div></div>`;
+const card=e=>`<div class="cd" data-a="play" data-id="${e.id}"><div class="cv" style="${cvs(e)}">${cvt(e)}</div><b>${E(e.title)}</b><small>${E(e.series)}</small></div>`;
+function content(){const c=$('#ct'),v=V.view,all=S.eps.slice().sort((a,b)=>new Date(b.added)-new Date(a.added));let h='';
+ if(v==='home'){const f=all.filter(e=>e.fav),ss=series();
+  h=spot()+`<div class="hero"><div><h1>Welkom terug</h1><p class="sub" style="margin:0">${real().length} eigen ${real().length===1?'aflevering':'afleveringen'} in ${new Set(real().map(e=>e.series)).size} ${new Set(real().map(e=>e.series)).size===1?'serie':'series'}</p></div><button class="b1" data-a="go" data-v="add">${I.plus} Nieuwe podcast toevoegen</button></div>`;
+  if(!real().length)h+=`<div class="empty"><h2 style="margin-top:0">Je bibliotheek is nog leeg</h2><p class="sub">De afleveringen hieronder zijn demo’s zonder audio. Upload je eerste echte podcast om te beginnen.</p><button class="b1" data-a="go" data-v="add">Upload mijn eerste podcast</button>${S.eps.length?' <button class="b2" data-a="rmdemo">Demo’s verwijderen</button>':''}</div>`;
+  h+=`<h2>Recent toegevoegd</h2><div class="rail">${all.slice(0,10).map(card).join('')||'<p class="note">Nog niets toegevoegd.</p>'}</div><h2>Favoriete afleveringen</h2>${f.length?`<div class="rail">${f.map(card).join('')}</div>`:'<p class="note">Tik op het hartje bij een aflevering om hem hier te bewaren.</p>'}<h2>Alle podcastseries</h2><div class="grid">${ss.map(sc).join('')||'<p class="note">Nog geen series.</p>'}</div>`}
+ else if(v==='series'){h=`<h1>Mijn podcasts</h1><p class="sub">Kies een serie om de afleveringen te zien.</p><div class="grid">${series().map(sc).join('')||'<p class="note">Nog geen series. Voeg een aflevering toe en geef hem een serienaam.</p>'}</div>`}
+ else if(['eps','favs','recent'].includes(v)){const l=filt();ctx=l.filter(e=>e.audio.kind!=='demo').map(e=>e.id);const T={eps:'Alle afleveringen',favs:'Favorieten',recent:'Recent beluisterd'}[v];
+  h=`<h1>${T}</h1><p class="sub">${l.length} ${l.length===1?'aflevering':'afleveringen'}</p>`+(l.length?l.map(row).join(''):`<div class="empty"><p class="sub">${S.eps.length?'Geen afleveringen gevonden met deze filters.':'Hier staat nog niets.'}</p><button class="b1" data-a="go" data-v="add">Upload mijn eerste podcast</button></div>`)}
+ else if(v==='vlogs'){h=vfeed()}else if(v==='watch'){h=watchv()}else if(v==='cats'){h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h1>Categorieën</h1><p class="sub">Maak, hernoem of verwijder categorieën.</p></div><button class="b1" data-a="catnew">${I.plus} Nieuwe categorie</button></div>`+S.cats.map(k=>{const n=S.eps.filter(e=>e.cat===k.id).length;return`<div class="row" style="grid-template-columns:1fr auto auto auto"><div class="mt"><b>${E(k.name)}</b><small>${n} ${n===1?'aflevering':'afleveringen'}</small></div><button class="b2" data-a="catview" data-id="${k.id}">Bekijken</button><button class="b2" data-a="catedit" data-id="${k.id}">Hernoemen</button><button class="b2" data-a="catdel" data-id="${k.id}" style="color:var(--red2)">Verwijderen</button></div>`}).join('')}
+ else if(v==='add'&&V.add==='vlog'){h=vlogForm()}else if(v==='add'){h=`<h1>Nieuwe podcast toevoegen</h1><p class="sub">Kies je audiobestanden en vul daarna de gegevens in. Eén titel werkt alleen bij één bestand; anders wordt de bestandsnaam de titel.</p><div class="two"><div><div id="dz" class="dz"><b>Sleep audiobestanden hierheen</b><br><br><button class="b1" data-a="pick">Kies bestanden</button><input id="fi" type="file" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" hidden><small>MP3, WAV, M4A, AAC of OGG, voor zover je browser ze kan afspelen.</small></div><div id="pl"></div><div class="card" style="margin-top:16px"><b>Hoe wordt dit opgeslagen?</b><small class="note">${cap.assets?'M4A-bestanden tot 20 MB gaan naar de serveropslag van deze pagina en zijn duurzaam. MP3, WAV, AAC en OGG staan alleen in deze browser (label: “Alleen op dit apparaat”). Zet die om naar M4A als je ze overal wilt kunnen afspelen.':'Serveropslag is hier niet beschikbaar: audio blijft in deze browser (IndexedDB) en is dus niet duurzaam. Titels en voortgang worden wel lokaal bewaard.'} Titels, categorieën, favorieten en luistervoortgang ${cap.doc?'worden aan je account gekoppeld.':'blijven in deze browser.'}</small></div></div><div class="card">${form()}<button class="b1" data-a="commit" style="width:100%">Toevoegen aan bibliotheek</button></div></div>`}
+ c.innerHTML=(v==='add'?seg():'')+h;if(v==='add')pl();if(v==='watch')wload()}
+function sc(s){const l=S.eps.filter(e=>e.series===s),f=l.find(e=>e.cover)||l[0];return`<div class="cd" data-a="serv" data-s="${E(s)}"><div class="cv" style="${cvs(f)}">${cvt(f)}</div><b>${E(s)}</b><small>${l.length} ${l.length===1?'aflevering':'afleveringen'}</small></div>`}
+/* formulieren */
+const form=(e={})=>`<label>Titel<input id="f-t" value="${E(e.title||'')}" placeholder="Leeg laten = bestandsnaam"></label><label>Podcastserie<input id="f-s" list="sl" value="${E(e.series||'')}" placeholder="Bijv. Canada Compleet"><datalist id="sl">${series().map(s=>`<option value="${E(s)}">`).join('')}</datalist></label><label>Categorie<select id="f-c">${S.cats.map(c=>`<option value="${c.id}"${c.id===(e.cat||V.cat||S.cats[0]?.id)?' selected':''}>${E(c.name)}</option>`).join('')}</select></label><label>Korte beschrijving<textarea id="f-d" rows="3">${E(e.desc||'')}</textarea></label><label>Tags (gescheiden door komma’s)<input id="f-g" value="${E((e.tags||[]).filter(t=>t!=='demo').join(', '))}"></label><label>Datum van toevoeging<input id="f-a" type="date" value="${(e.added||new Date().toISOString()).slice(0,10)}"></label><label>Coverafbeelding (optioneel)<input id="f-i" type="file" accept="image/*"></label>`;
+const rd=()=>({title:$('#f-t').value.trim(),series:$('#f-s').value.trim(),cat:$('#f-c').value,desc:$('#f-d').value.trim(),tags:$('#f-g').value.split(',').map(s=>s.trim()).filter(Boolean),added:new Date($('#f-a').value||Date.now()).toISOString(),img:$('#f-i').files[0]});
+function modal(h,ok,lbl){const m=$('#modal');m.innerHTML=`<div class="mb"><div>${h}</div><div class="mf"><button class="b2" data-a="mclose">Annuleren</button><button class="b1" id="mok">${lbl||'Opslaan'}</button></div></div>`;m.hidden=false;$('#mok').onclick=async()=>{if(await ok()!==false)m.hidden=true}}
+async function coverOf(f,w){if(!f)return'';try{const im=await createImageBitmap(f),m=cap.assets?(w||640):200,s=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.8));if(cap.assets)try{return(await cap.assets.upload(b)).id}catch{}return await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}catch{toast('De coverafbeelding kon niet worden gelezen.','err');return''}}
+const durOf=f=>new Promise(r=>{const a=new Audio(),u=URL.createObjectURL(f);a.preload='metadata';a.onloadedmetadata=()=>{r(a.duration);URL.revokeObjectURL(u)};a.onerror=()=>{r(0);URL.revokeObjectURL(u)};a.src=u});
+function pl(){const p=$('#pl');if(p)p.innerHTML=pending.map(f=>`<div class="pi">${E(f.name)} <span style="color:var(--mut)">· ${(f.size/1048576).toFixed(1)} MB</span></div>`).join('')}
+function pick(fs){const ok=[...fs].filter(f=>/^audio\//.test(f.type)||/\.(mp3|wav|m4a|aac|ogg|oga|opus)$/i.test(f.name));if(ok.length<fs.length)toast('Niet-audiobestanden zijn overgeslagen.','err');pending=pending.concat(ok);pl()}
+async function commit(){if(!pending.length)return toast('Kies eerst minstens één audiobestand.','err');const f=rd(),files=pending.slice();const cover=await coverOf(f.img);let n=0;const b=$('[data-a=commit]');b.disabled=true;b.textContent='Bezig met uploaden…';
+ for(const file of files){const ext=(file.name.split('.').pop()||'').toLowerCase(),d=await durOf(file);if(!isFinite(d)||d<=0){toast(`“${file.name}” kan deze browser niet afspelen en is niet toegevoegd.`,'err');continue}
+  const e={id:uid(),title:(files.length===1&&f.title)||file.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' '),series:f.series||'Zonder serie',cat:f.cat,desc:f.desc,tags:f.tags,added:f.added,dur:d,fav:false,pos:0,last:0,cover,audio:null};
+  try{if(cap.assets&&/^(m4a|mp4)$/.test(ext)&&file.size<=20*1048576){const r=await cap.assets.upload(file,{type:'video/mp4'});e.audio={kind:'asset',id:r.id}}else{await idbOp('put',file,e.id);e.audio={kind:'local',id:e.id}}S.eps.unshift(e);n++}
+  catch(x){toast(`“${file.name}” is niet toegevoegd: ${x.message||x.code||'onbekende fout'}`,'err')}}
+ S.eps=S.eps.filter(e=>!(e.audio.kind==='demo'&&false));pending=[];save();if(n){toast(`${n} ${n===1?'aflevering':'afleveringen'} toegevoegd aan je bibliotheek.`);go('eps')}else view()}
+function editEp(id){const e=ep(id);modal(`<h2 style="margin-top:0">Aflevering bewerken</h2>${form(e)}`,async()=>{const f=rd();if(!f.title)return toast('Vul een titel in.','err'),false;Object.assign(e,{title:f.title,series:f.series||'Zonder serie',cat:f.cat,desc:f.desc,tags:f.tags,added:f.added});if(f.img)e.cover=await coverOf(f.img);save();view();up();toast('Wijzigingen opgeslagen.')})}
+function delEp(id){const e=ep(id);modal(`<h2 style="margin-top:0">Verwijderen?</h2><p>“${E(e.title)}” wordt uit je bibliotheek verwijderd${e.audio.kind==='asset'?', inclusief het opgeslagen audiobestand':e.audio.kind==='local'?', inclusief het lokale audiobestand':''}. Dit kan niet ongedaan worden gemaakt.</p>`,async()=>{try{if(e.audio.kind==='asset'&&cap.assets)await cap.assets.delete(e.audio.id);if(e.audio.kind==='local')await idbOp('delete',e.audio.id)}catch(x){toast('Audiobestand verwijderen mislukt: '+(x.message||x.code),'err')}
+ if(cur===id){au.pause();au.removeAttribute('src');cur=null}S.eps=S.eps.filter(x=>x.id!==id);S.queue=S.queue.filter(x=>x!==id);save();view();toast('Aflevering verwijderd.')},'Verwijderen')}
+const catForm=(k)=>{modal(`<h2 style="margin-top:0">${k?'Categorie hernoemen':'Nieuwe categorie'}</h2><label>Naam<input id="cn" value="${E(k?k.name:'')}"></label>`,()=>{const n=$('#cn').value.trim();if(!n)return toast('Geef de categorie een naam.','err'),false;if(k)k.name=n;else S.cats.push({id:'c'+uid(),name:n});save();view();toast('Categorie opgeslagen.')})};
+/* acties */
+document.addEventListener('click',ev=>{const t=ev.target.closest('[data-a]'),id=t&&t.dataset.id;if(menuId&&!(t&&t.dataset.a==='menu')){menuId=null;if(!t||t.dataset.a!=='edit'&&t.dataset.a!=='del'&&t.dataset.a!=='enq')content()}if(!t)return;
+ switch(t.dataset.a){
+ case'go':go(t.dataset.v);break;case'play':if(cur===id)toggle();else play(id);break;
+ case'fav':{const e=ep(id);e.fav=!e.fav;save();content();toast(e.fav?'Toegevoegd aan favorieten.':'Verwijderd uit favorieten.');break}
+ case'menu':menuId=menuId===id?null:id;content();break;case'edit':editEp(id);break;case'del':delEp(id);break;
+ case'enq':if(ep(id).audio.kind==='demo')toast('Demo-afleveringen hebben geen audio en kunnen niet in de wachtrij.','err');else{S.queue.push(id);save();rq();toast('Aan de wachtrij toegevoegd.')}break;
+ case'toggle':toggle();break;case'watch':au.pause();go('watch',{vid:id});break;case'newvlog':go('add',{add:'vlog'});break;case'addmode':V.add=t.dataset.m;view();break;case'vsrc':V.vsrc=t.dataset.m;$('#vsf').hidden=V.vsrc==='url';$('#vsu').hidden=V.vsrc!=='url';t.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===t));break;case'vcommit':vcommit();break;case'vedit':editVlog(id);break;case'vdel':delVlog(id);break;case'theme':setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');break;case'expand':$('#pb').classList.toggle('open');break;case'speed':{const sp=[1,1.25,1.5,2],n=sp[(sp.indexOf(au.defaultPlaybackRate)+1)%sp.length];au.defaultPlaybackRate=au.playbackRate=n;$('#spd').textContent=n+'x';break}case'prev':prev();break;case'next':next();break;case'skip':au.currentTime=Math.max(0,Math.min(au.duration||0,au.currentTime+ +t.dataset.n));break;
+ case'queue':{const q=$('#q');q.hidden=!q.hidden;rq();break}case'qrm':S.queue.splice(+t.dataset.i,1);save();rq();break;case'qclear':S.queue=[];save();rq();break;
+ case'serv':go('eps',{ser:t.dataset.s,q:'',cat:''});break;
+ case'catview':go('eps',{cat:id,q:'',ser:''});break;case'catedit':catForm(S.cats.find(c=>c.id===id));break;case'catnew':catForm();break;
+ case'catdel':{const k=S.cats.find(c=>c.id===id);modal(`<h2 style="margin-top:0">Categorie verwijderen?</h2><p>“${E(k.name)}” wordt verwijderd. Afleveringen blijven bestaan, maar komen zonder categorie te staan.</p>`,()=>{S.eps.forEach(e=>{if(e.cat===id)e.cat=''});S.cats=S.cats.filter(c=>c.id!==id);save();view();toast('Categorie verwijderd.')},'Verwijderen');break}
+ case'pick':$('#fi').click();break;case'commit':commit();break;case'mclose':$('#modal').hidden=true;break;
+ case'rmdemo':S.eps=S.eps.filter(e=>e.audio.kind!=='demo');save();view();toast('Demo-afleveringen verwijderd.');break}});
+document.addEventListener('change',ev=>{const t=ev.target;if(t.id==='fi'){pick(t.files);t.value=''}if(t.id==='fc')V.cat=t.value;if(t.id==='fs')V.ser=t.value;if(t.id==='so')V.sort=t.value;if(t.id==='vs')V.vs=t.value;if(['fc','fs','so','vs'].includes(t.id))content()});
+document.addEventListener('input',ev=>{if(ev.target.id==='s'){V.q=ev.target.value;content()}});
+['dragover','dragleave','drop'].forEach(n=>document.addEventListener(n,ev=>{const d=ev.target.closest&&ev.target.closest('#dz');if(!d)return;ev.preventDefault();d.classList.toggle('over',n==='dragover');if(n==='drop')pick(ev.dataTransfer.files)}));
+
+/* ===== Reisvlogs ===== */
+let vurl='';
+const dday=n=>n?'Dag '+String(n).padStart(2,'0'):'Reisdag';
+const vdate=d=>new Date(d).toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'});
+const vtag=v=>dday(v.day)+(v.loc?' \u2022 '+E(v.loc):'');
+const vsort=()=>S.vlogs.slice().sort(V.vs==='dd'?(a,b)=>b.day-a.day:V.vs==='new'?(a,b)=>new Date(b.date)-new Date(a.date):(a,b)=>a.day-b.day);
+const vcv=v=>v.cover?`background-image:url('${cs(v.cover)}')`:`background:linear-gradient(135deg,hsl(${hue(v.loc||v.title)} 45% 32%),hsl(${hue(v.loc||v.title)+50} 55% 14%))`;
+const ytId=u=>{const m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/);return m?m[1]:''};
+const seg=()=>`<div class="seg"><button class="${V.add!=='vlog'?'on':''}" data-a="addmode" data-m="podcast">${I.mic} Podcast toevoegen</button><button class="${V.add==='vlog'?'on':''}" data-a="addmode" data-m="vlog">${I.yt} Reisvlog toevoegen</button></div>`;
+const vcard=v=>`<article class="vc" data-a="watch" data-id="${v.id}"><div class="vt" style="${vcv(v)}">${v.cover?'':`<span class="vn">${v.day||''}</span>`}${v.dur?`<i class="vdur">${fmt(v.dur)}</i>`:''}</div><div class="vm"><span class="vb">${vtag(v)}</span><b>${E(v.title)}</b><small>${vdate(v.date)}</small></div></article>`;
+function spot(){const v=S.vlogs.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)||b.day-a.day)[0];
+ if(!v)return`<div class="spot off"><div><span class="vb">Reisvlogs</span><h2>Begin je reisdagboek</h2><p class="sub">Voeg je eerste reisdag toe als video of YouTube-link.</p></div><button class="b1" data-a="newvlog">${I.plus} Reisvlog toevoegen</button></div>`;
+ return`<div class="spot" data-a="watch" data-id="${v.id}" style="${vcv(v)}"><div class="sc"><span class="vb">Nieuwste reisvlog</span><h2>${E(v.title)}</h2><p>${vtag(v)} \u00b7 ${vdate(v.date)}</p><span class="b1">${I.play} Kijk nu</span></div></div>`}
+function vfeed(){const l=vsort();return`<h1>Reisvlogs</h1><p class="sub">${l.length} ${l.length===1?'dag':'dagen'} onderweg</p>`+(l.length?`<div class="vg">${l.map(vcard).join('')}</div>`:`<div class="empty"><h2 style="margin-top:0">Nog geen reisvlogs</h2><p class="sub">Voeg je eerste reisdag toe als videobestand of YouTube-link.</p><button class="b1" data-a="newvlog">Reisvlog toevoegen</button></div>`)}
+function watchv(){const v=S.vlogs.find(x=>x.id===V.vid);if(!v)return`<div class="empty"><p class="sub">Deze vlog bestaat niet meer.</p><button class="b1" data-a="go" data-v="vlogs">Terug naar vlogs</button></div>`;
+ const l=S.vlogs.slice().sort((a,b)=>a.day-b.day||new Date(a.date)-new Date(b.date)),i=l.indexOf(v),p=l[i-1],n=l[i+1],s=v.src;
+ const pl=s.kind==='yt'?`<iframe id="vp" src="https://www.youtube-nocookie.com/embed/${s.id}?rel=0" title="${E(v.title)}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`:`<video id="vp" controls playsinline preload="metadata"${v.cover?` poster="${cs(v.cover)}"`:''}${s.kind==='url'?` src="${E(s.url)}"`:''}></video>`;
+ const ext=s.kind==='yt'?'https://www.youtube.com/watch?v='+s.id:s.kind==='url'?s.url:'';
+ return`<div class="wv"><button class="b2" data-a="go" data-v="vlogs">${I.cl} Alle vlogs</button><div class="p169">${pl}</div><div class="wi"><span class="vb">${vtag(v)}</span><h1>${E(v.title)}</h1><div class="meta">${v.loc?`<span>${I.pin} ${E(v.loc)}</span>`:''}<span>${vdate(v.date)}</span>${v.dur?`<span>${fmt(v.dur)}</span>`:''}${s.kind==='local'?'<span class="bd wn">Alleen op dit apparaat</span>':s.kind==='asset'?'<span class="bd ok">Duurzaam opgeslagen</span>':''}</div>${v.desc?`<div class="story">${E(v.desc)}</div>`:''}<div class="wn"><button class="b2" data-a="watch" data-id="${p?p.id:''}"${p?'':' disabled'}>${I.cl} Vorige dag</button><button class="b2" data-a="watch" data-id="${n?n.id:''}"${n?'':' disabled'}>Volgende dag ${I.cr}</button></div><div class="wa">${ext?`<a class="b2" href="${E(ext)}" target="_blank" rel="noopener noreferrer">Open op de bron</a>`:''}<button class="b2" data-a="vedit" data-id="${v.id}">Bewerken</button><button class="b2" data-a="vdel" data-id="${v.id}" style="color:#e22134">Verwijderen</button></div></div></div>`}
+async function wload(){const v=S.vlogs.find(x=>x.id===V.vid),p=$('#vp');if(!v||!p)return;if(vurl){URL.revokeObjectURL(vurl);vurl=''}const s=v.src;try{if(s.kind==='asset')p.src='/_blob/'+s.id;else if(s.kind==='local'){const b=await idbOp('get',s.id);if(!b)throw 0;vurl=URL.createObjectURL(b);p.src=vurl}}catch{toast('Het videobestand staat niet op dit apparaat. Upload het opnieuw.','err')}}
+function vlogForm(){const nx=Math.max(0,...S.vlogs.map(v=>v.day))+1,u=V.vsrc==='url';return`<h1>Nieuwe reisvlog toevoegen</h1><p class="sub">E\u00e9n video per reisdag.</p><div class="two"><div class="card"><b>Video</b><div class="seg" style="margin:12px 0"><button class="${u?'':'on'}" data-a="vsrc" data-m="file">Videobestand</button><button class="${u?'on':''}" data-a="vsrc" data-m="url">YouTube / link</button></div><div id="vsf"${u?' hidden':''}><label>MP4 of WebM<input id="v-f" type="file" accept="video/mp4,video/webm,.mp4,.webm"></label><small class="note" style="margin-top:0">${cap.assets?'Bestanden tot 20 MB worden duurzaam opgeslagen. Grotere video\u2019s blijven alleen in deze browser (label \u201cAlleen op dit apparaat\u201d). Voor lange vlogs bespaar je ruimte met een YouTube-link.':'Serveropslag is hier niet beschikbaar: de video blijft in deze browser (IndexedDB). Gebruik een YouTube-link om ruimte te besparen.'}</small></div><div id="vsu"${u?'':' hidden'}><label>YouTube- of videolink<input id="v-u" type="url" placeholder="https://youtu.be/\u2026"></label><label>Duur (mm:ss, optioneel)<input id="v-m" placeholder="14:20"></label><small class="note" style="margin-top:0">Alleen de link wordt bewaard, geen video. Of de ingesloten speler hier werkt hangt van de hostingomgeving af; bij elke vlog staat een knop om de video op de bron te openen.</small></div></div><div class="card"><label>Dagnummer<input id="v-n" type="number" min="1" value="${nx}"></label><label>Titel van de dag<input id="v-t" placeholder="Bijv. Over de Icefields Parkway"></label><label>Locatie<input id="v-l" placeholder="Banff, Alberta"></label><label>Reisdatum<input id="v-d" type="date" value="${new Date().toISOString().slice(0,10)}"></label><label>Thumbnail (optioneel, anders automatisch)<input id="v-i" type="file" accept="image/*"></label><label>Reisverhaal<textarea id="v-s" rows="5"></textarea></label><button class="b1" data-a="vcommit" style="width:100%">Reisvlog opslaan</button></div></div>`}
+const vinfo=f=>new Promise(r=>{const v=document.createElement('video'),u=URL.createObjectURL(f);let done=false;const fin=(d,th)=>{if(done)return;done=true;URL.revokeObjectURL(u);r({d,th})};v.muted=true;v.playsInline=true;v.preload='metadata';
+ v.onerror=()=>fin(0);v.onloadedmetadata=()=>{const d=v.duration;if(!isFinite(d)||d<=0)return fin(0);v.currentTime=Math.min(1,d/2)};
+ v.onseeked=()=>{try{const c=document.createElement('canvas'),k=Math.min(1,640/v.videoWidth);c.width=v.videoWidth*k;c.height=v.videoHeight*k;c.getContext('2d').drawImage(v,0,0,c.width,c.height);c.toBlob(b=>fin(v.duration,b),'image/jpeg',.8)}catch{fin(v.duration)}};
+ setTimeout(()=>fin(v.duration||0),8000);v.src=u});
+async function vcommit(){const t=$('#v-t').value.trim(),img=$('#v-i').files[0];if(!t)return toast('Geef de dag een titel.','err');const b=$('[data-a=vcommit]');b.disabled=true;b.textContent='Bezig met opslaan\u2026';
+ const v={id:uid(),day:+$('#v-n').value||0,title:t,loc:$('#v-l').value.trim(),date:new Date($('#v-d').value||Date.now()).toISOString(),desc:$('#v-s').value.trim(),dur:0,cover:'',src:null};
+ try{if(V.vsrc==='url'){const u=$('#v-u').value.trim();if(!/^https?:\/\//i.test(u))throw{message:'Vul een geldige link in (https://\u2026).'};const y=ytId(u);v.src=y?{kind:'yt',id:y}:{kind:'url',url:u};const m=$('#v-m').value.trim().match(/^(\d+):(\d{2})$/);if(m)v.dur=+m[1]*60+ +m[2]}
+  else{const f=$('#v-f').files[0];if(!f)throw{message:'Kies eerst een videobestand.'};if(!(/^video\/(mp4|webm)$/.test(f.type)||/\.(mp4|webm)$/i.test(f.name)))throw{message:'Alleen MP4 of WebM wordt ondersteund.'};
+   const info=await vinfo(f);if(!info.d)throw{message:'Deze browser kan dit videobestand niet afspelen.'};v.dur=info.d;
+   if(cap.assets&&f.size<=20*1048576){const r=await cap.assets.upload(f,{type:/webm$/i.test(f.name)?'video/webm':'video/mp4'});v.src={kind:'asset',id:r.id}}else{await idbOp('put',f,'v'+v.id);v.src={kind:'local',id:'v'+v.id}}
+   if(!img&&info.th)v.cover=await coverOf(info.th)}
+  if(img)v.cover=await coverOf(img);S.vlogs.unshift(v);save();toast('Reisvlog toegevoegd.');go('vlogs')}
+ catch(x){toast('Niet toegevoegd: '+(x.message||x.code||'onbekende fout'),'err');b.disabled=false;b.textContent='Reisvlog opslaan'}}
+function editVlog(id){const v=S.vlogs.find(x=>x.id===id);modal(`<h2>Reisvlog bewerken</h2><label>Dagnummer<input id="e-n" type="number" min="1" value="${v.day}"></label><label>Titel<input id="e-t" value="${E(v.title)}"></label><label>Locatie<input id="e-l" value="${E(v.loc)}"></label><label>Reisdatum<input id="e-d" type="date" value="${v.date.slice(0,10)}"></label><label>Reisverhaal<textarea id="e-s" rows="5">${E(v.desc)}</textarea></label>`,()=>{const t=$('#e-t').value.trim();if(!t)return toast('Vul een titel in.','err'),false;Object.assign(v,{day:+$('#e-n').value||v.day,title:t,loc:$('#e-l').value.trim(),date:new Date($('#e-d').value||v.date).toISOString(),desc:$('#e-s').value.trim()});save();view();toast('Wijzigingen opgeslagen.')})}
+function delVlog(id){const v=S.vlogs.find(x=>x.id===id),k=v.src.kind;modal(`<h2>Reisvlog verwijderen?</h2><p>\u201c${E(v.title)}\u201d wordt verwijderd${k==='asset'||k==='local'?', inclusief het opgeslagen videobestand':''}. Dit kan niet ongedaan worden gemaakt.</p>`,async()=>{try{if(k==='asset'&&cap.assets)await cap.assets.delete(v.src.id);if(k==='local')await idbOp('delete',v.src.id)}catch(x){toast('Videobestand verwijderen mislukt: '+(x.message||x.code),'err')}S.vlogs=S.vlogs.filter(x=>x.id!==id);save();go('vlogs');toast('Reisvlog verwijderd.')},'Verwijderen')}
+window.addEventListener('beforeunload',()=>{if(cur)flush()});
+function initIcons(){const s=(q,h)=>{const n=$(q);if(n)n.innerHTML=h};s('#lgi',I.leaf);s('[data-a=prev]',I.prev);s('[data-a=next]',I.next);s('[data-n="-15"]',I.back);s('[data-n="15"]',I.fwd);s('#qi',I.list);s('#vi',I.vol);s('#chv',I.chev);setTheme(document.documentElement.dataset.theme||'light',false)}
+function setTheme(t,k){document.documentElement.dataset.theme=t;if(k!==false)try{localStorage.setItem('theme',t)}catch{}const b=$('#theme');if(b){b.innerHTML=t==='dark'?I.sun:I.moon;b.setAttribute('aria-label',t==='dark'?'Schakel naar lichte modus':'Schakel naar donkere modus')}}
+load();initIcons();view();stat();initCaps();
+</script></body></html>
